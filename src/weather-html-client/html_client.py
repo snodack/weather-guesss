@@ -3,14 +3,13 @@
 """
 import json
 from datetime import datetime
-from click import FileError
 import requests
 
 class HtmlClient:
     """
         A class implements the API connection mechanism.
     """
-    def __init__(self, file_api = "api.json"):
+    def __init__(self, file_api = "api.json") -> None:
         """
             Init object HtmlClient with params
 
@@ -23,11 +22,11 @@ class HtmlClient:
                 json_api:dict = json.load(file)
                 key = json_api.get("key", None)
                 if key is None:
-                    raise FileError
+                    raise Exception()
                 self.api_key = key
         except FileNotFoundError:
             print(f"Can't find file: {file_api}")
-        except FileError:
+        except Exception:
             print(f"Can't find value \"key\" in file: {file_api}")
     def get_historical_data(self, location: str, date: datetime) -> dict:
         """

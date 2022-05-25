@@ -128,3 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 src/weather-html-client/api.json
+api.json
+src/weather-html-client/data.json
+db_url.json
