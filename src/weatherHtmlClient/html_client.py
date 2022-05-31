@@ -9,12 +9,14 @@ class HtmlClient:
     """
         A class implements the API connection mechanism.
     """
-    def __init__(self, file_api = "api.json") -> None:
+    def __init__(self, parser, queue, file_api = "api.json") -> None:
         """
             Init object HtmlClient with params
 
             :param file_api: Path to json with API key
-                like {"key": "HiimYourKeyToWeatherapi.com"}
+                like {"key": "HiimYourKeyToWeatherapi.com"},
+            :param parser: Parser object, with method parse_to_model,
+            :param queue: Queue to return value.
         """
 
         try:

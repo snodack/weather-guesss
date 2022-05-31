@@ -24,16 +24,15 @@ class SqlService:
             :param db_params_path: Path to json with sql params
                to connection with db
         """
-        self.db_params_path =  db_params_path
+        self.db_params_path = db_params_path
+        self.engine = self.__get_engine_from_params()
 
     def get_session(self):
         """
             Getting session for connection.
 
         """
-        self.engine = self.__get_engine_from_params()
-        session = sessionmaker(bind=self.engine)()
-        return session
+        return sessionmaker(bind=self.engine)()
 
     def __get_engine_from_params(self) -> Engine:
         """
@@ -62,6 +61,16 @@ class SqlService:
             create_database(url)
         engine = create_engine(url, pool_size=50, echo=False)
         return engine
+    def add_objects(self, orm_objects):
+        """
+            Method for adding ORM object in database.
+
+        """
+        sess =  self.get_session()
+        sess.add_all(orm_objects)
+        sess.commit()
+        
+
 
 
 if __name__ == "__main__":
