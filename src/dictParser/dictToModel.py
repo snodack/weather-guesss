@@ -2,7 +2,7 @@
     Class to implement dict parsing to ORM models
 
 """
-from src.sqlAlchemy.models.models import City, Weather
+from sqlAlchemy.models.models import City, Weather
 class DictToModel:
     """
         Class to implement dict parsing to ORM models
@@ -12,29 +12,26 @@ class DictToModel:
             Constructor.
         """
         pass
-    def parse_to_model(self, array_by_dict_hour) -> list:
+    def parse_to_model(self, dict_hour) -> Weather:
         """
             Method for parsing dict to ORM Object.
             :param array_by_dict_hour: Dictionary json weatherapi
             :return: list, of ORM Models.
         """
-        all_hours_dict = array_by_dict_hour["forecast"]["forecastday"]["hour"]
-        weather_orm_models = []
-        for hour in all_hours_dict:
-            weathet_in_hour = Weather(  temp_c=hour["temp_c"],
+ 
+        weathet_in_hour = Weather(  temp_c=dict_hour["temp_c"],
                                         city_id=1,
-                                        is_day=hour["is_day"],
-                                        wind_kph=hour["wind_kph"],
-                                        wind_degree=hour["wind_degree"],
-                                        precip_in=hour["precip_in"],
-                                        pressure_in=hour["pressure_in"],
-                                        humidity=hour["humidity"],
-                                        cloud=hour["cloud"],
-                                        will_it_rain=hour["will_it_rain"],
-                                        chance_of_rain=hour["chance_of_rain"],
-                                        will_it_show=hour["will_it_show"],
-                                        chance_of_snow=hour["chance_of_snow"])
-            weather_orm_models.append(weathet_in_hour)
+                                        is_day=dict_hour["is_day"],
+                                        wind_kph=dict_hour["wind_kph"],
+                                        wind_degree=dict_hour["wind_degree"],
+                                        precip_in=dict_hour["precip_in"],
+                                        pressure_in=dict_hour["pressure_in"],
+                                        humidity=dict_hour["humidity"],
+                                        cloud=dict_hour["cloud"],
+                                        will_it_rain=dict_hour["will_it_rain"],
+                                        chance_of_rain=dict_hour["chance_of_rain"],
+                                        will_it_show=dict_hour["will_it_snow"],
+                                        chance_of_snow=dict_hour["chance_of_snow"])
         return weathet_in_hour
 
         

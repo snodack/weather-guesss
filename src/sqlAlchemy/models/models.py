@@ -3,7 +3,7 @@
 """
 from sqlalchemy import Column, Integer, String, ForeignKey, \
     Float, Boolean
-from models.base import Base
+from sqlAlchemy.models.base import Base
 
 class City(Base):
     """

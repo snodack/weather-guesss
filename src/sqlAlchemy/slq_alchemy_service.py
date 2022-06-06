@@ -2,12 +2,14 @@
     ORM Connection to database
 """
 import json
-from sqlalchemy import create_engine, event, DDL
+from queue import Queue
+import queue
+from sqlalchemy import create_engine, event, DDL, true
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
-from models.models import *
-from models.base import Base
+from sqlAlchemy.models.models import *
+from sqlAlchemy.models.base import Base
 event.listen(
     Base.metadata, "before_create", DDL("CREATE SCHEMA IF NOT EXISTS weather_data")
 )
@@ -61,14 +63,20 @@ class SqlService:
             create_database(url)
         engine = create_engine(url, pool_size=50, echo=False)
         return engine
-    def add_objects(self, orm_objects):
+    def add_objects(self, orm_objects, stop_event):
         """
             Method for adding ORM object in database.
 
         """
         sess =  self.get_session()
-        sess.add_all(orm_objects)
-        sess.commit()
+        while stop_event.is_set():
+            try:
+                object = orm_objects.get()
+                sess.add(object)
+                print(f"Add object {str(object)}")
+                sess.commit()
+            except queue.Empty:
+                pass
         
 
 

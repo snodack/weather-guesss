@@ -9,7 +9,7 @@ class HtmlClient:
     """
         A class implements the API connection mechanism.
     """
-    def __init__(self, parser, queue, file_api = "api.json") -> None:
+    def __init__(self, parser, que, file_api = "api.json") -> None:
         """
             Init object HtmlClient with params
 
@@ -18,7 +18,8 @@ class HtmlClient:
             :param parser: Parser object, with method parse_to_model,
             :param queue: Queue to return value.
         """
-
+        self.parser = parser
+        self.que = que
         try:
             with open(file_api, 'r', encoding='utf-8') as file:
                 json_api:dict = json.load(file)
@@ -30,7 +31,7 @@ class HtmlClient:
             print(f"Can't find file: {file_api}")
         except Exception:
             print(f"Can't find value \"key\" in file: {file_api}")
-    def get_historical_data(self, location: str, date: datetime) -> dict:
+    def get_historical_data(self, location: str, date: datetime, stop_event) -> dict:
         """
             Getting data for day From API Free Weather.
 
@@ -47,8 +48,9 @@ class HtmlClient:
                         "dt": date.strftime("%Y-%m-%d")})
         if resp.status_code != 200:
             raise Exception(f"Can't get Historical Date {resp.status_code}")
-        print(type(resp.json()))
+        responce_json = resp.json()
+        hours = responce_json["forecast"]["forecastday"][0]["hour"]
+        for hour in hours:
+            self.que.put(self.parser.parse_to_model(hour))
+        stop_event.clear()
 
-if __name__ == "__main__":
-    htmlclient = HtmlClient()
-    htmlclient.get_historical_data("UFA", datetime.now())
