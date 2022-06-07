@@ -15,10 +15,10 @@ if __name__ == "__main__":
     dictParser = DictToModel()
     sql_service = SqlService()
     html_client = HtmlClient(dictParser, que)
-    html_client_thread = Thread(target=html_client.get_historical_data, args=("UFA", datetime.datetime.now(), stop_event))
+    sql_service.add_city(dictParser.parse_city_to_model({"name":"UFA"}))
+    html_client_thread = Thread(target=html_client.get_last_week_data, args=("UFA", stop_event))
     sql_service_thread = Thread(target=sql_service.add_objects, args=(que,stop_event))
     html_client_thread.start()
     sql_service_thread.start()
-    html_client_thread.join()
     sql_service_thread.join()
     #sql_service_thread =sql_service.

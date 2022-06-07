@@ -2,7 +2,8 @@
     Models for ORM
 """
 from sqlalchemy import Column, Integer, String, ForeignKey, \
-    Float, Boolean
+    Float, Boolean, DateTime
+from sqlalchemy.orm import relationship
 from sqlAlchemy.models.base import Base
 
 class City(Base):
@@ -14,6 +15,7 @@ class City(Base):
 
     id = Column(Integer, primary_key = True)
     name = Column(String)
+    children = relationship("Weather")
 
 class Weather(Base):
     """
@@ -23,7 +25,8 @@ class Weather(Base):
     __table_args__ = {"schema": "weather_data"}
 
     record_id = Column(Integer, primary_key = True)
-    city_id = Column(Integer)
+    city_id = Column(Integer, ForeignKey(City.id))
+    time = Column(DateTime)
     temp_c = Column(Float)
     is_day = Column(Boolean)
     wind_kph = Column(Float)
@@ -34,5 +37,5 @@ class Weather(Base):
     cloud = Column(Integer)
     will_it_rain = Column(Integer)
     chance_of_rain = Column(Integer)
-    will_it_show = Column(Integer)
+    will_it_snow = Column(Integer)
     chance_of_snow = Column(Integer)

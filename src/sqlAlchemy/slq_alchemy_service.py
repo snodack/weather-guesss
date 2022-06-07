@@ -28,6 +28,8 @@ class SqlService:
         """
         self.db_params_path = db_params_path
         self.engine = self.__get_engine_from_params()
+        Base.metadata.bind = self.engine
+        Base.metadata.create_all(checkfirst=True)
 
     def get_session(self):
         """
@@ -65,18 +67,25 @@ class SqlService:
         return engine
     def add_objects(self, orm_objects, stop_event):
         """
-            Method for adding ORM object in database.
+            Method for adding ORM object of Weather in database.
 
         """
         sess =  self.get_session()
-        while stop_event.is_set():
+        while not (stop_event.is_set()):
             try:
                 object = orm_objects.get()
                 sess.add(object)
-                print(f"Add object {str(object)}")
-                sess.commit()
+                
             except queue.Empty:
                 pass
+        sess.commit()
+    def add_city(self, city):
+        """
+            Method for adding ORM object of city in database.
+        """
+        sess =  self.get_session()
+        sess.add(city)
+        sess.commit()
         
 
 

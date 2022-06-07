@@ -2,7 +2,7 @@
     This Module implements API connection to Wetheapi.com
 """
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 
 class HtmlClient:
@@ -31,14 +31,13 @@ class HtmlClient:
             print(f"Can't find file: {file_api}")
         except Exception:
             print(f"Can't find value \"key\" in file: {file_api}")
-    def get_historical_data(self, location: str, date: datetime, stop_event) -> dict:
+    def get_historical_data(self, location: str, date: datetime, stop_event=None):
         """
             Getting data for day From API Free Weather.
 
             :param location: Getting weather for this US Zipcode, UK Postcode, Canada Postalcode,
                 IP address, Latitude/Longitude (decimal degree) or city name
             :param date: Date, which you want to get.
-            :return: dict with weather data
         """
 
         resp = requests.request("GET",
@@ -46,11 +45,23 @@ class HtmlClient:
                         params={"key":self.api_key,
                         "q": location,
                         "dt": date.strftime("%Y-%m-%d")})
-        if resp.status_code != 200:
-            raise Exception(f"Can't get Historical Date {resp.status_code}")
-        responce_json = resp.json()
-        hours = responce_json["forecast"]["forecastday"][0]["hour"]
-        for hour in hours:
-            self.que.put(self.parser.parse_to_model(hour))
-        stop_event.clear()
+        try:
+            if resp.status_code != 200:
+                raise Exception(f"Can't get Historical Date {resp.status_code}")
+            responce_json = resp.json()
+            hours = responce_json["forecast"]["forecastday"][0]["hour"]
+            for hour in hours:
+                self.que.put(self.parser.parse_hour_to_model(hour))
+        except Exception:
+            print("Error with data {data}")
+        if not stop_event is None:
+            stop_event.set()
+    def get_last_week_data(self, location: str, stop_event):
+        date = datetime.now()
+        for minus_day in range(0, 8):
+            current_date = date - timedelta(days=minus_day)
+            self.get_historical_data(location=location, date=current_date)
+        stop_event.set()
+
+    
 
