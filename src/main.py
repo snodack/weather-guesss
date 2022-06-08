@@ -6,7 +6,7 @@ from queue import Queue
 from threading import Thread, Event
 import datetime
 from sqlAlchemy.slq_alchemy_service import SqlService
-from dictParser.dictToModel import DictToModel
+from dictParser.dict_to_model import DictToModel
 from weatherHtmlClient.html_client import HtmlClient
 
 if __name__ == "__main__":
