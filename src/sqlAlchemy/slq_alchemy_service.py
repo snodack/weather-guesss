@@ -71,11 +71,10 @@ class SqlService:
 
         """
         sess =  self.get_session()
-        while not (stop_event.is_set()):
+        while not stop_event.is_set():
             try:
-                object = orm_objects.get()
-                sess.add(object)
-                
+                obj = orm_objects.get()
+                sess.add(obj)
             except queue.Empty:
                 pass
         sess.commit()
@@ -84,9 +83,20 @@ class SqlService:
             Method for adding ORM object of city in database.
         """
         sess =  self.get_session()
-        sess.add(city)
+        if isinstance(city, list):
+            sess.add_all(city)
+        else:
+            sess.add(city)
         sess.commit()
-        
+    def get_city_from_json_path(self, city_path):
+        """
+            Add city from json
+            :param city_path to file.
+            :return json or list of json of citys
+        """
+        with open(city_path, 'r', encoding='utf-8') as file:
+            json_city = json.load(file)
+        return json_city
 
 
 

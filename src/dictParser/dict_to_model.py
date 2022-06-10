@@ -37,11 +37,16 @@ class DictToModel:
     def parse_city_to_model(self, dict_city: dict) -> City:
         """
             Method for parsing dict to ORM Object.
-            :param Dictionary Json {"name": London}
+            :param Dictionary Json {"name": London, "state": "Blablabla"}
             :return: ORM Model of City.
         """
-        return City(name=dict_city["name"])
-
-        
-
+        return City(name=dict_city["city"],
+                    state = dict_city["state"])
+    def parse_list_of_city(self, list_of_dict: list) ->list:
+        """
+            Method for parsing list of dict to list of ORM Object.
+            :param List of Dict Json {"name": London, "state": "Blablabla"}
+            :return: list of ORM Model of City.
+        """
+        return list(map(self.parse_city_to_model, list_of_dict))
         
