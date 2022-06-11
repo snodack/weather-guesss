@@ -13,14 +13,16 @@ class DictToModel:
             Constructor.
         """
         pass
-    def parse_hour_to_model(self, dict_hour) -> Weather:
+    def parse_hour_to_model(self, dict_hour, location_id:int) -> Weather:
         """
             Method for parsing weather dict to ORM Object(Weather).
-            :param dict_hour: Json weatherapi
+            :param dict_hour: Json weatherapi;
+            :param location_id id of the city;
             :return ORM Model of Weather.
+
         """
         weather_in_hour = Weather(  temp_c=dict_hour["temp_c"],
-                                        city_id=1,
+                                        city_id=location_id,
                                         time = datetime.strptime(dict_hour["time"], "%Y-%m-%d %H:%M"),
                                         is_day=dict_hour["is_day"],
                                         wind_kph=dict_hour["wind_kph"],

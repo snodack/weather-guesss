@@ -132,3 +132,4 @@ api.json
 src/weather-html-client/data.json
 db_url.json
 api_token_universal_tutorial.json
+city_json.json

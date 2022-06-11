@@ -2,13 +2,14 @@
     Module to getting all City for County/State.
     Modele is using www.universal-tutorial.com, so you need api_token.
 """
+from enum import Enum
+from time import sleep
 import json
 from typing import List
 import requests
-from enum import Enum
-from time import sleep
 
-class Area_Type:
+
+class AreaType(Enum):
     """
         Enum class for area type.
         For Type Country -> Find States -> Find City
@@ -81,15 +82,17 @@ class CityJsonGetter:
         json_object = json.dumps(json_list, indent = None)
         with open(self.output_path, "w", encoding="UTF-8") as outfile:
             outfile.write(json_object)
-    def get_city_json(self, area_string:str, area_type: Area_Type) -> None:
+    def get_city_json(self, area_string:str, area_type: AreaType) -> None:
         """
             Get city for area_string. if area_type == country then
             getting all states in; after getting all city for all states
             if area_type == state then getting all city for state
             and write in path.
+            :param area_string- name of city or state
+            :param area_type - enum AreaType, define city or state area_string is.
 
         """
-        if area_type == Area_Type.COUNTRY:
+        if area_type == AreaType.COUNTRY:
             states = list(map(lambda x: x["state_name"],self._get_all_state(area_string)))
             all_city = []
             for state in states:
@@ -97,7 +100,7 @@ class CityJsonGetter:
                 city = list(map(lambda x: {"city": x["city_name"], "state": state},
                     self._get_all_city_in_state(state)))
                 all_city.extend(city)
-        elif area_type == Area_Type.STATE:
+        elif area_type == AreaType.STATE:
             print(f"Getting city for state: {state}")
             all_city = list(map(lambda x: {"city": x["city_name"], "state": area_string},
                 self._get_all_city_in_state(area_string)))
@@ -105,4 +108,4 @@ class CityJsonGetter:
 
 if __name__ == "__main__":
     city_json_parser = CityJsonGetter("api_token_universal_tutorial.json", "city_json.json")
-    city_json_parser.get_city_json("Russia", Area_Type.COUNTRY)
+    city_json_parser.get_city_json("Russia", AreaType.COUNTRY)

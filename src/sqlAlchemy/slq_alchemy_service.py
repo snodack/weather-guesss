@@ -4,7 +4,7 @@
 import json
 from queue import Queue
 import queue
-from sqlalchemy import create_engine, event, DDL, true
+from sqlalchemy import create_engine, event, DDL, select
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
@@ -82,12 +82,23 @@ class SqlService:
         """
             Method for adding ORM object of city in database.
         """
-        sess =  self.get_session()
+        sess = self.get_session()
         if isinstance(city, list):
             sess.add_all(city)
         else:
             sess.add(city)
         sess.commit()
+    def get_city(self, id:int=None, name:str=None) -> City:
+        """
+            Method to get City.
+            :param id, id of city in database;
+            :param name, name of the city in database;
+            :return City if exists or None.
+
+        """
+        sess = self.get_session()
+        result = sess.execute(select(City).where((City.name == name) | (City.id == id)))
+        return result.fetchone()[0]
     def get_city_from_json_path(self, city_path):
         """
             Add city from json
