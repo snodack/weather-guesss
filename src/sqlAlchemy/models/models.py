@@ -15,7 +15,8 @@ class City(Base):
 
     id = Column(Integer, primary_key = True)
     name = Column(String)
-    state = Column(String)
+    admin_name = Column(String)
+    long_lat = Column(String)
     children = relationship("Weather")
 
 class Weather(Base):

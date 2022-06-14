@@ -98,7 +98,7 @@ class SqlService:
         """
         sess = self.get_session()
         result = sess.execute(select(City).where((City.name == name) | (City.id == id)))
-        return result.fetchone()[0]
+        return result.fetchone()
     def get_city_from_json_path(self, city_path):
         """
             Add city from json

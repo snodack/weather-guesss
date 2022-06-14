@@ -43,7 +43,8 @@ class DictToModel:
             :return: ORM Model of City.
         """
         return City(name=dict_city["city"],
-                    state = dict_city["state"])
+                    admin_name = dict_city["admin_name"],
+                    long_lat = f'{dict_city["lat"]}, {dict_city["lng"]}')
     def parse_list_of_city(self, list_of_dict: list) ->list:
         """
             Method for parsing list of dict to list of ORM Object.

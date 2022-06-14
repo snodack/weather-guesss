@@ -1,4 +1,7 @@
 """
+    NOT USED.
+"""
+"""
     Module to getting all City for County/State.
     Modele is using www.universal-tutorial.com, so you need api_token.
 """
